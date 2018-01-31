@@ -7,7 +7,5 @@ export const setTodos = (todos) => {
   }
 }
 export const fetchTodos = () => dispatch => { 
-   const test = dispatch(setTodos(initialState))
-   console.log(test);
-   return  test
+    return dispatch(setTodos(initialState))
   }
