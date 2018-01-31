@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import { Table } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import {fetchTodos} from './actions/action'
+import PropTypes from 'prop-types'
 
-class App extends Component {
+export class App extends Component {
   componentWillMount(){
-		this.props.fetchTodos();
+    this.props.fetchTodos();
 	}
   render() {
     const todoList = []
@@ -25,7 +26,7 @@ class App extends Component {
       return todoList
     })
     return (
-      <div className="App">
+      <div >
         <Table celled>
           <Table.Header>
             <Table.Row>
@@ -40,7 +41,9 @@ class App extends Component {
               return (
                 <Table.Row key = {todo.id} active>
                 
-                <Table.Cell><Link to={`/todos/${todo.id}`}>{todo.name}</Link></Table.Cell>
+                <Table.Cell>
+                  <Link to={`/todos/${todo.id}`}>{todo.name}</Link>
+                </Table.Cell>
                 <Table.Cell>
                   Spent time:{todo.actual_effort}<br />
                   Rating: {todo.estimated_effort} <br />
@@ -73,7 +76,11 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+App.propTypes = {
+  fetchTodos: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state, props) => {
   return {
     todos: state.todos.filter(todo => todo.obj_status === "active")
   }

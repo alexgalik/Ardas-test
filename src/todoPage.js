@@ -1,22 +1,34 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import {fetchTodos} from './actions/action';
 
-class Todo extends Component { 
+export class Todo extends Component { 
+
+     componentWillMount(){
+        this.props.fetchTodos();
+    }
+    
     constructor(props){
         super(props);
         this.state = {
-            id: this.props.todo.id,
-            newName: this.props.todo.name,
+            id: this.props.todo ? this.props.todo.id : '',
+            newName: this.props.todo ? this.props.todo.name: '',
             editing: false
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.editName = this.editName.bind(this);
-    }   
+    }
+
+    componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            id: nextProps.todo.id,
+            newName: nextProps.todo.name,
+          });
+      }
 
     editName = () =>{
         this.setState({editing: true});
-        console.log(this.state);
     }
 
     onSubmit = (e) => {
@@ -42,7 +54,7 @@ class Todo extends Component {
     
     render() {
         const TodoName = (
-            <p>Name: {this.state.newName}</p>
+            <p className = "name">Name: {this.state.newName}</p>
         )
     
         const editingForm = (
@@ -59,9 +71,9 @@ class Todo extends Component {
         )
         return(
             <div>
-                <div onClick = {this.editName}>{this.state.editing ? editingForm : TodoName}</div>
+                <div onClick = {this.editName} className="click">{this.state.editing ? editingForm : TodoName}</div>
                 <p>
-                Description: {this.props.todo.description ? this.props.todo.description: "There is no description"}
+                Description: {this.props.todo ? this.props.todo.description: "There is no description"}
                 </p>
             </div>
         )
@@ -69,10 +81,9 @@ class Todo extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-    console.log(Number(props.match.params.id));
     return {
         todo: state.todos.find(todo => todo.id === Number(props.match.params.id))
     };
 }
 
-export default connect(mapStateToProps, null)(Todo);
+export default connect(mapStateToProps, {fetchTodos})(Todo);
